@@ -9,20 +9,20 @@ try:
         print('Successfully Connected to MySQL database')
         cursor = myconnection.cursor()
 
-        generate_user_table = "CREATE TABLE IF NOT EXISTS `user_table` (`email` varchar(100) NOT NULL,\
+        create_table = "CREATE TABLE IF NOT EXISTS `user_table` (`email` varchar(100) NOT NULL,\
         `Name` varchar(50) NOT NULL,\
         `Password` varchar(50) NOT NULL)"
 
-        cursor.execute(generate_user_table)
+        cursor.execute(create_table)
 
-        mySql_insert_query = """INSERT INTO user_table (email, Name, Password) 
+        mysql_insert_query = """INSERT INTO user_table (email, Name, Password) 
                            VALUES (%s, %s, %s) """
 
         records_to_insert = [('ywbaek@perscholas.org', 'young', 'letsgomets'),
                             ('mcordon@perscholas.org', 'marcial', 'perscholas'),
                             ('mhaseeb@perscholas.org', 'haseeb', 'platform')]
    
-        cursor.executemany(mySql_insert_query, records_to_insert)
+        cursor.executemany(mysql_insert_query, records_to_insert)
         myconnection.commit()
         print(cursor.rowcount, "Record inserted successfully into Laptop table")
 
