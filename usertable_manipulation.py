@@ -85,11 +85,16 @@ def validate_user(email, password):
 
             mysql_query_validate_user = f"""SELECT name
             FROM user_table
-            WHERE email = '{email}' AND password = '{password}'""";
+            WHERE email = %s AND password = %s """;
 
-            cursor.execute(mysql_query_validate_user)
+            cursor.execute(mysql_query_validate_user, (email, password))
             record_2 = cursor.fetchall()
             print(record_2)
+
+            if len(record_2) == 0:
+                 return False
+            else:
+                 return True
 
     except Error as e:
         print("Error while connecting to Database", e)
@@ -99,21 +104,26 @@ def validate_user(email, password):
                 myconnection.close()
         print("Database connection is closed")
 
-def update_user(email, name, password):
+def update_user(name, password, email):
     try:
         myconnection = dbconnect.connect(host='localhost',database='registrationdb',user='root',password='password')
-        
+
         if myconnection.is_connected():
             print('Successfully Connected to MySQL database')
             cursor = myconnection.cursor()
 
             mysql_query_update_user = f"""UPDATE user_table
-            SET name = '{name}'
-            WHERE email = '{email}' AND password = '{password}'""";
+            SET name = %s, password = %s
+            WHERE email = %s """;
 
-            cursor.execute(mysql_query_update_user)
+            cursor.execute(mysql_query_update_user, (name, password, email))
             myconnection.commit()
             print(cursor.rowcount, "Record updated successfully into user_table table")
+
+            if cursor.rowcount == 0:
+                 return False
+            else:
+                 return True
 
     except Error as e:
         print("Error while connecting to Database", e)
@@ -125,9 +135,9 @@ def update_user(email, name, password):
 
 
 
-get_user_by_name('marcial')
+get_user_by_name('young')
 validate_user('mhaseeb@perscholas.org', 'platform')
-update_user('mcordon@perscholas.org', 'jose', 'perscholas')
+update_user('koa', 'perscholas', 'mcordon@perscholas.org')
      
 
 
